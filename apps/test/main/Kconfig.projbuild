@@ -28,4 +28,11 @@ menu "Example Configuration"
             help 
                 SCL pin for bme280 sensor.
     endmenu
+    menu "BME280 I2C FREQUENCY"
+        config BME280_I2C_FREQ
+            int "BME280 i2c frequency"
+            default 100000
+            help 
+                I2C Frequency for bme280 sensor.
+    endmenu
 endmenu

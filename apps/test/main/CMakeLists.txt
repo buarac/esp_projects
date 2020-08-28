@@ -1,4 +1,4 @@
-set(COMPONENT_SRCS "test.c")
+set(COMPONENT_SRCS "test.cpp")
 
 register_component()
 
