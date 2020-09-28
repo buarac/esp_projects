@@ -4,6 +4,7 @@ cmake_minimum_required(VERSION 3.5)
 
 set(EXTRA_COMPONENT_DIRS 
     "../../components/i2c_device"
+    "../../components/bme280_device"
 )
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)

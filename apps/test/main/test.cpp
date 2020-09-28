@@ -7,8 +7,10 @@
 #include "esp_sleep.h"
 #include <string.h>
 //#include "i2cdev.h"
-#include "i2c_device.h"
+//#include "i2c_device.h"
 //#include "bme280.h"
+#include "bme280_device.h"
+
 
 static const char *TAG = "TEST";
 
@@ -18,47 +20,43 @@ static const char *TAG = "TEST";
 #define BME280_SCL  CONFIG_BME280_I2C_SCL
 #define BME280_FREQ CONFIG_BME280_I2C_FREQ
 
+const BME280_Params bme280_params {
+        .filter = BME280_FILTER_OFF,
+        .mode = BME280_SLEEP_MODE,
+        .over_samp_temp = BME280_OVERSAMPLING_1,
+        .over_samp_humi = BME280_OVERSAMPLING_1,
+        .over_samp_pres = BME280_OVERSAMPLING_1,
+        .standby = BME280_STANDBY_1000
+};
+
 extern "C" {
     void app_main(void);
 };
-
-class BME280_Device: public I2C_Device {
-    private:
-    public:
-        BME280_Device(uint8_t addr, i2c_port_t port, uint8_t sda, uint8_t scl, uint32_t freq);
-        esp_err_t init();
-};
-
-BME280_Device::BME280_Device(uint8_t addr, i2c_port_t port, uint8_t sda, uint8_t scl, uint32_t freq)
-    :I2C_Device(addr, port, sda, scl, freq) {
-
-    ESP_LOGV(TAG, "BME280_Device::BME280_Device");
-}
-
-esp_err_t BME280_Device::init() {
-    I2C_Device::init();
-    ESP_LOGV(TAG, "BME280_Device::init");
-
-    uint8_t reg = 0xd0;
-    uint8_t val;
-
-    if ( read(&reg, 1, &val, 1) != ESP_OK ) {
-        ESP_LOGE(TAG, "Failed to read device");
-        return ESP_FAIL;
-    }
-    printf("Chid id = %d, %02x\n", val, val);
-    return ESP_OK;
-}
 
 void app_main(void) {
 
     ESP_LOGV(TAG, "app_main");
 
-    //I2C_Device dev(BME280_ADDR, BME280_PORT, BME280_SDA, BME280_SCL, BME280_FREQ);
     BME280_Device dev(BME280_ADDR, BME280_PORT, BME280_SDA, BME280_SCL, BME280_FREQ);
 
-    dev.init();
+    if ( !dev.Init(bme280_params)  ) {
+        ESP_LOGE(TAG, "failed to init bme280 device");
+        return;
+    }
+    ESP_LOGI(TAG, "BME280 device initialized");
 
+    BME280_Data data;
+    int measureId = 1;
+
+    while(true) {
+        data = dev.ReadDataForced();
+        printf("-----------------------\n");
+        printf("measure id : %d\n", measureId++);
+        printf("temperature: %.2f\n", data.temperature);
+        printf("humidity   : %.2f\n", data.humidity);
+        printf("pressure   : %.2f\n", data.pressure);
+        vTaskDelay(60000/portTICK_RATE_MS);
+    }    
 }
 
 /*

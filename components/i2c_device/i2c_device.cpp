@@ -2,10 +2,10 @@
 #include "i2c_device.h"
 #include <string.h>
 
-static const char* TAG = "i2c_device";
+static const char* TAG = "I2C";
 
 I2C_Device::I2C_Device(uint8_t addr, i2c_port_t port, uint8_t sda, uint8_t scl, uint32_t freq) {
-    ESP_LOGV(TAG, "I2C_Device::I2C_Device()");
+    ESP_LOGV(TAG, "Constructor");
     this->addr = addr;
     this->port = port;
     this->sda = sda;
@@ -13,8 +13,8 @@ I2C_Device::I2C_Device(uint8_t addr, i2c_port_t port, uint8_t sda, uint8_t scl, 
     this->freq = freq;
 }
 
-esp_err_t I2C_Device::init() {
-    ESP_LOGV(TAG, "I2C_Device::init()");
+esp_err_t I2C_Device::Init() {
+    ESP_LOGV(TAG, "Init()");
 
     i2c_config_t conf;
     conf.mode = I2C_MODE_MASTER;
@@ -27,8 +27,8 @@ esp_err_t I2C_Device::init() {
     return i2c_driver_install(this->port, conf.mode,0, 0, 0);    
 }
 
-esp_err_t I2C_Device::read(uint8_t* out_data, size_t out_size, uint8_t* rd_data, size_t rd_size) {
-    ESP_LOGV(TAG, "I2C_Device::read(len=%d)", rd_size);
+esp_err_t I2C_Device::Read(uint8_t* out_data, size_t out_size, uint8_t* rd_data, size_t rd_size) {
+    ESP_LOGV(TAG, "Read(len=%d)", rd_size);
 
     if ( (rd_data==NULL) || (rd_size <= 0) ) {
         ESP_LOGE(TAG, "i2c device read invalid args");
@@ -56,8 +56,8 @@ esp_err_t I2C_Device::read(uint8_t* out_data, size_t out_size, uint8_t* rd_data,
     return ret;
 }
 
-esp_err_t I2C_Device::write(uint8_t* out_data, size_t out_size, uint8_t* wr_data, size_t wr_size) {
-    ESP_LOGV(TAG, "I2C_Devicei::write(len=%d)", wr_size);
+esp_err_t I2C_Device::Write(uint8_t* out_data, size_t out_size, uint8_t* wr_data, size_t wr_size) {
+    ESP_LOGV(TAG, "Write(len=%d)", wr_size);
     
     if ( (wr_data==NULL) || (wr_size <= 0) ) {
         ESP_LOGE(TAG, "i2c device write invalid args");

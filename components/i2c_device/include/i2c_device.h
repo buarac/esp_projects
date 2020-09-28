@@ -35,9 +35,9 @@ class I2C_Device {
         uint32_t    freq;
     public:
         I2C_Device(uint8_t addr, i2c_port_t port, uint8_t sda, uint8_t scl, uint32_t freq);
-        esp_err_t init();
-        esp_err_t read(uint8_t* out_data, size_t out_size, uint8_t* rd_data, size_t rd_size);
-        esp_err_t write(uint8_t* out_data, size_t out_size, uint8_t* wr_data, size_t wr_size);
+        esp_err_t Init();
+        esp_err_t Read(uint8_t* out_data, size_t out_size, uint8_t* rd_data, size_t rd_size);
+        esp_err_t Write(uint8_t* out_data, size_t out_size, uint8_t* wr_data, size_t wr_size);
 };
 
 #endif // _I2C_DEVICE_H
