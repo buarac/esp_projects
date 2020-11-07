@@ -26,6 +26,14 @@ esp_err_t i2c_device_read(i2c_device_t* i2c, void* out_data, size_t out_size, vo
 esp_err_t i2c_device_write(i2c_device_t* i2c, void* reg_data, size_t reg_size, void* out_data, size_t out_size);
 */
 
+typedef struct {
+    uint8_t     addr;
+    i2c_port_t  port;
+    uint8_t     sda;
+    uint8_t     scl;
+    uint32_t    freq;
+} I2C_Params;
+
 class I2C_Device {
     private:
         uint8_t     addr;
@@ -35,6 +43,7 @@ class I2C_Device {
         uint32_t    freq;
     public:
         I2C_Device(uint8_t addr, i2c_port_t port, uint8_t sda, uint8_t scl, uint32_t freq);
+        I2C_Device(I2C_Params params);
         esp_err_t Init();
         esp_err_t Read(uint8_t* out_data, size_t out_size, uint8_t* rd_data, size_t rd_size);
         esp_err_t Write(uint8_t* out_data, size_t out_size, uint8_t* wr_data, size_t wr_size);

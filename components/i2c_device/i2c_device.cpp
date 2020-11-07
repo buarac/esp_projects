@@ -13,6 +13,16 @@ I2C_Device::I2C_Device(uint8_t addr, i2c_port_t port, uint8_t sda, uint8_t scl, 
     this->freq = freq;
 }
 
+I2C_Device::I2C_Device(I2C_Params params) {
+    ESP_LOGV(TAG, "Constructor(params)");
+    this->addr = params.addr;
+    this->port = params.port;
+    this->sda = params.sda;
+    this->scl = params.scl;
+    this->freq = params.freq;
+}
+
+
 esp_err_t I2C_Device::Init() {
     ESP_LOGV(TAG, "Init()");
 

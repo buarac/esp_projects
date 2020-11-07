@@ -4,6 +4,7 @@
 #include "i2c_device.h"
 
 
+
 // BME280 registers
 #define BME280_REG_CHIP_ID      0xd0
 #define BME280_REG_RESET        0xe0
@@ -162,6 +163,7 @@ class BME280_Device: public I2C_Device {
 
     public:
         BME280_Device(uint8_t addr, i2c_port_t port, uint8_t sda, uint8_t scl, uint32_t freq);
+        BME280_Device(I2C_Params params);
         bool Init();
         bool Init(BME280_Params params);
 

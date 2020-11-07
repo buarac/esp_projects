@@ -3,14 +3,11 @@
 cmake_minimum_required(VERSION 3.5)
 
 set(EXTRA_COMPONENT_DIRS 
-    "../../components/i2c_device"
-    "../../components/bme280_device"
-    "../../components/sensors"
 )
 
-set(PROJECT_VER "1.0.3.9")
+set(PROJECT_VER "1.0.0.1")
 
 include($ENV{IDF_PATH}/tools/cmake/project.cmake)
 add_compile_options (-fdiagnostics-color=always)
-project(test)
+project(bridge_espnow)
 

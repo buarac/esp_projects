@@ -4,6 +4,13 @@
 
 static const char *TAG = "BME280";
 
+BME280_Device::BME280_Device(I2C_Params params): I2C_Device(params) {
+    ESP_LOGV(TAG, "Constructor(settings)");
+    lastError = ESP_OK;
+    regName = 0;
+    regData = 0;
+}
+
 BME280_Device::BME280_Device(uint8_t addr, i2c_port_t port, uint8_t sda, uint8_t scl, uint32_t freq)
     :I2C_Device(addr, port, sda, scl, freq) {
 

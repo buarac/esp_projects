@@ -1,0 +1,38 @@
+menu "Example Configuration"
+    
+    menu "BME280 I2C Port"
+        config BME280_I2C_PORT
+            int "I2C drive port number"
+            default 0
+            help 
+                I2C port for bme280 sensor.
+    endmenu
+    menu "BME280 I2C Address"
+        config BME280_I2C_ADDR
+            hex "BME280 device address"
+            default 0x76
+            help 
+                I2C address for bme280 sensor.
+    endmenu
+    menu "BME280 I2C SDA PIN"
+        config BME280_I2C_SDA
+            int "BME280 i2c sda pin"
+            default 21
+            help 
+                SDA pin for bme280 sensor.
+    endmenu
+    menu "BME280 I2C SCL PIN"
+        config BME280_I2C_SCL
+            int "BME280 i2c scl pin"
+            default 22
+            help 
+                SCL pin for bme280 sensor.
+    endmenu
+    menu "BME280 I2C FREQUENCY"
+        config BME280_I2C_FREQ
+            int "BME280 i2c frequency"
+            default 100000
+            help 
+                I2C Frequency for bme280 sensor.
+    endmenu
+endmenu
