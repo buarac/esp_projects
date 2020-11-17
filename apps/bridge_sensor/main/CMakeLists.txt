@@ -1,4 +1,4 @@
-set(COMPONENT_SRCS "bridge_mqtt.c" "bridge_espnow.c" "bridge_wifi.c" "bridge.c")
+set(COMPONENT_SRCS "bridge_task.c" "bridge_event.c" "bridge_mqtt.c" "bridge_espnow.c" "bridge_wifi.c" "bridge.c")
 
 register_component()
 

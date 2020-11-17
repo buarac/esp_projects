@@ -44,8 +44,30 @@ static RTC_DATA_ATTR uint32_t measureId = 0;
 static uint8_t broadcast_mac[ESP_NOW_ETH_ALEN] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 static uint8_t data_sent;
 
+#define LED_PIN GPIO_NUM_2
+#define LED_ON  1
+#define LED_OFF 0
+#define GPIO_OUTPUT_PIN_SEL  (1ULL<<LED_PIN)
+
+void led_init() {
+    gpio_config_t io_conf;
+    io_conf.intr_type = GPIO_INTR_DISABLE;
+    io_conf.mode = GPIO_MODE_OUTPUT;
+    io_conf.pin_bit_mask = GPIO_OUTPUT_PIN_SEL;
+    io_conf.pull_down_en = GPIO_PULLDOWN_DISABLE;
+    io_conf.pull_up_en = GPIO_PULLUP_DISABLE;
+    gpio_config(&io_conf);
+}
+
+void led(uint8_t state) {
+    gpio_set_level(LED_PIN, state);
+}
+
+
 static void example_wifi_init(void)
 {
+
+
     ESP_ERROR_CHECK(esp_netif_init());
     ESP_ERROR_CHECK(esp_event_loop_create_default());
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
@@ -141,6 +163,8 @@ static void read_and_send_measure() {
 void app_main(void) {
 
     ESP_LOGV(TAG, "app_main");
+    led_init();
+    led(LED_ON);
 
     // Initialize NVS
     esp_err_t ret = nvs_flash_init();
@@ -161,5 +185,6 @@ void app_main(void) {
     ESP_LOGI(TAG, "enabling timer wakeup, %d sec", WAKEUP_TIME_SEC);
     esp_sleep_enable_timer_wakeup(WAKEUP_TIME_SEC * 1000000);
     ESP_LOGI(TAG, "entering deep sleep");
+    led(LED_OFF);
     esp_deep_sleep_start();
 }

@@ -16,6 +16,7 @@ static void bridge_wifi_event_handler(void* arg, esp_event_base_t event_base, in
     if ( event_base == WIFI_EVENT ) {
         ESP_LOGV(TAG, "bridge_wifi_event_handler::WIFI_EVENT");
         if ( event_id == WIFI_EVENT_STA_START ) {
+            xEventGroupClearBits(s_bridge_wifi_event_group, BRIDGE_WIFI_FAIL_BIT | BRIDGE_WIFI_CONNECTED_BIT );
             ESP_LOGI(TAG, "bridge_wifi_event_handler::WIFI_EVENT_STA_START");
             esp_wifi_connect();
         }
@@ -102,9 +103,9 @@ esp_err_t bridge_wifi_init(void) {
         err = ESP_FAIL;
     }
     /* The event will not be processed after unregister */
-    ESP_ERROR_CHECK(esp_event_handler_instance_unregister(IP_EVENT, IP_EVENT_STA_GOT_IP, instance_got_ip));
-    ESP_ERROR_CHECK(esp_event_handler_instance_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID, instance_any_id));
-    vEventGroupDelete(s_bridge_wifi_event_group);
+    //ESP_ERROR_CHECK(esp_event_handler_instance_unregister(IP_EVENT, IP_EVENT_STA_GOT_IP, instance_got_ip));
+    //ESP_ERROR_CHECK(esp_event_handler_instance_unregister(WIFI_EVENT, ESP_EVENT_ANY_ID, instance_any_id));
+    //vEventGroupDelete(s_bridge_wifi_event_group);
 
     // channel;
     uint8_t primary_channel;

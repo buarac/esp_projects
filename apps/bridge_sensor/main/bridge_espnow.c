@@ -3,6 +3,8 @@
 static const char *TAG = "BRIDGE_ESPN";
 static uint8_t broadcast_mac[ESP_NOW_ETH_ALEN] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
+static EventGroupHandle_t s_bridge_espnow_event_group;
+
 esp_err_t bridge_espnow_add_peer(const uint8_t* mac_addr) {
     ESP_LOGV(TAG, "adding peer "MACSTR"", MAC2STR(mac_addr));
 
@@ -33,43 +35,30 @@ static void bridge_espnow_send_cb(const uint8_t *mac_addr, esp_now_send_status_t
 }
 
 static void bridge_espnow_recv_cb(const uint8_t *mac_addr, const uint8_t *data, int len) {
-    ESP_LOGI(TAG, "Recv data from "MACSTR"", MAC2STR(mac_addr));
-    if ( len == sizeof(sensor_info_t) ) {
-        sensor_info_t* sensor = (sensor_info_t*)data;
+    ESP_LOGI(TAG, "Recv data from "MACSTR" for %d byte(s)", MAC2STR(mac_addr), len);
 
-        if ( sensor->magic == SENSOR_MAGIC_ID && 
-             sensor->type == SENSOR_BME280 ) {
+    bridge_event_t evt;
+    bridge_espnow_recv_event_t* recv = &evt.info.espnow_recv;
 
-            uint16_t crc = sensor->crc16;
-            sensor->crc16 = 0;
-            uint16_t cal_crc = esp_crc16_le(UINT16_MAX, (uint8_t*)sensor, sizeof(sensor_info_t));    
-            if ( crc != cal_crc ) {
-                ESP_LOGE(TAG, "bad crc, message ignored");
-            }    
-            else {
-                char topic[64];
-                char message[16];
+    evt.id = BRIDGE_ESPNOW_RECV_EVENT;
+    memcpy(recv->mac_addr, mac_addr, ESP_NOW_ETH_ALEN);
 
-                bridge_espnow_add_peer(mac_addr);
+    if ( len > 0 ) {
+        recv->data = malloc ( len );
+        if ( recv->data == NULL ) {
+            ESP_LOGE(TAG, "failed to malloc memory for BRIDGE_ESPNOW_RECV_EVENT");
+        }
+        else {
+            memcpy(recv->data, data, len);
+            recv->data_len = len;
 
-                sprintf(topic, BRIDGE_MQTT_TOPIC_TEMP, sensor->id);
-                sprintf(message, "%2.2f", sensor->data.bme280.temp);
-                esp_mqtt_client_publish(bridge_mqtt_client, topic, message, 0, 1, 0);
+            //ESP_LOGI(TAG, "new recv event len = %d", recv->data_len);
+            //ESP_LOG_BUFFER_HEXDUMP(TAG, recv, sizeof(bridge_espnow_recv_event_t), ESP_LOG_INFO);
+            //ESP_LOG_BUFFER_HEXDUMP(TAG, &evt, sizeof(bridge_event_t), ESP_LOG_WARN);
 
-                sprintf(topic, BRIDGE_MQTT_TOPIC_HUMI, sensor->id);
-                sprintf(message, "%2.2f", sensor->data.bme280.humi);
-                esp_mqtt_client_publish(bridge_mqtt_client, topic, message, 0, 1, 0);
-
-                sprintf(topic, BRIDGE_MQTT_TOPIC_PRES, sensor->id);
-                sprintf(message, "%4.2f", sensor->data.bme280.pres);
-                esp_mqtt_client_publish(bridge_mqtt_client, topic, message, 0, 1, 0);
-
-                /*    
-                char *ok_str = "OK";
-                if ( esp_now_send(mac_addr, (uint8_t*)ok_str, 2) != ESP_OK ) {
-                    ESP_LOGE(TAG, "send ack failed");
-                }
-                */
+            if ( bridge_event_publish(&evt) != ESP_OK ) {
+                ESP_LOGE(TAG, "failed to publish BRIDGE_ESPNOW_RECV_EVENT");
+                free(recv->data);
             }
         }
     }
@@ -77,6 +66,8 @@ static void bridge_espnow_recv_cb(const uint8_t *mac_addr, const uint8_t *data, 
 
 esp_err_t bridge_espnow_init(void) {
     ESP_LOGV(TAG, "bridge_espnow_init");
+
+    s_bridge_espnow_event_group = xEventGroupCreate();
 
     ESP_ERROR_CHECK( esp_now_init() );
     ESP_ERROR_CHECK( esp_now_register_send_cb(bridge_espnow_send_cb) );

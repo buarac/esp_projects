@@ -4,7 +4,10 @@
 #define SENSOR_MAGIC_ID 0x1389
 
 typedef enum {
-    SENSOR_BME280 = 0x01,
+    SENSOR_UNKNOWN = -2,
+    SENSOR_NOT_IMPLEMENTED = -1,
+    SENSOR_BAD_DATA = 0,
+    SENSOR_BME280,
     SENSOR_BME680
 } sensor_type_t;
 
