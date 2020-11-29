@@ -2,6 +2,20 @@
 
 static const char *TAG = "BRIDGE_MAIN";
 
+i2c_bus_handle_t i2c_bus_create(uint16_t data_1, uint32_t data_2) {
+    i2c_bus_t* bus = calloc(1, sizeof(i2c_bus_t));
+    bus->data1 = data_1;
+    bus->data2 = data_2;
+    return (i2c_bus_handle_t)bus;
+}
+
+esp_err_t i2c_bus_delete(i2c_bus_handle_t bus) {
+    if ( bus == NULL ) {
+        return ESP_FAIL;
+    }
+    free(bus);
+    return ESP_OK;
+}
 
 // MAIN
 void app_main(void) {
@@ -28,7 +42,7 @@ void app_main(void) {
         ESP_LOGW(TAG, "Free heap memory : %zu byte(s)", free_heap_mem);
         ESP_LOGW(TAG, "Measurement count: %zu", measurementCount);
         ESP_LOGW(TAG, "-------------------------------");
-        bridge_dump_per_task_heap_info();
+        //bridge_dump_per_task_heap_info();
         vTaskDelay(30000/portTICK_RATE_MS);
     }
 }

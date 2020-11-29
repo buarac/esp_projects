@@ -111,27 +111,20 @@ void bridge_event_task(void *pvParameter) {
                     sprintf(topic, BRIDGE_MQTT_TOPIC_TEMP, sensor->id);
                     sprintf(message, "%2.2f", sensor->data.bme280.temp);
                     sprintf(influx, BRIDGE_MQTT_INFLUX_DATA_FORMAT, "temperature", sensor->id, message);
-
-                    //esp_mqtt_client_publish(bridge_mqtt_client, topic, message, 0, 1, 0);
                     ESP_LOGI(TAG, "publishing to topic:%s message:%s", topic, influx);
                     esp_mqtt_client_publish(bridge_mqtt_client, topic, influx, 0, 1, 0);
 
                     sprintf(topic, BRIDGE_MQTT_TOPIC_HUMI, sensor->id);
                     sprintf(message, "%2.2f", sensor->data.bme280.humi);
                     sprintf(influx, BRIDGE_MQTT_INFLUX_DATA_FORMAT, "humidity", sensor->id, message);
-
-                    //esp_mqtt_client_publish(bridge_mqtt_client, topic, message, 0, 1, 0);
                     ESP_LOGI(TAG, "publishing to topic:%s message:%s", topic, influx);
                     esp_mqtt_client_publish(bridge_mqtt_client, topic, influx, 0, 1, 0);
 
                     sprintf(topic, BRIDGE_MQTT_TOPIC_PRES, sensor->id);
                     sprintf(message, "%4.2f", sensor->data.bme280.pres);
                     sprintf(influx, BRIDGE_MQTT_INFLUX_DATA_FORMAT, "pressure", sensor->id, message);
-
-                    //esp_mqtt_client_publish(bridge_mqtt_client, topic, message, 0, 1, 0);
                     ESP_LOGI(TAG, "publishing to topic:%s message:%s", topic, influx);
                     esp_mqtt_client_publish(bridge_mqtt_client, topic, influx, 0, 1, 0);
-                    //esp_mqtt_client_publish(bridge_mqtt_client, topic, message, 0, 1, 0);
 
                     
                     sprintf(topic, BRIDGE_MQTT_TOPIC_HEAP_MEM, sensor->id);

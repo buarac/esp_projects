@@ -26,10 +26,12 @@
 
 // 
 
-typedef void* bridge_handle_t;
-typedef void* sensor_handler_t;
-typedef void* i2c_bus_handler_t;
+typedef void* i2c_bus_handle_t;
 
+typedef struct {
+    uint16_t    data1;
+    uint32_t    data2;
+} i2c_bus_t;
 
 
 
@@ -47,7 +49,8 @@ typedef void* i2c_bus_handler_t;
 esp_err_t bridge_wifi_init(void); 
 
 // MQTT
-#define BRIDGE_MQTT_URI "mqtt://raspberrypi.local"
+//#define BRIDGE_MQTT_URI "mqtt://raspberrypi.local"
+#define BRIDGE_MQTT_URI "mqtt://192.168.0.156"
 #define BRIDGE_MQTT_TOPIC_TEMP "/sensors/%d/temperature"
 #define BRIDGE_MQTT_TOPIC_HUMI "/sensors/%d/humidity"
 #define BRIDGE_MQTT_TOPIC_PRES "/sensors/%d/pressure"
