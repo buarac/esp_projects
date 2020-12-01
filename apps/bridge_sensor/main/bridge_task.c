@@ -1,8 +1,11 @@
 #include "bridge.h"
 
+/*
 static const char *TAG = "BRIDGE_TASK";
 
 static size_t prepopulated_num = 0;
+
+
 static heap_task_totals_t   totals_arr[BRIDGE_MAX_TASK_NUM];
 static heap_task_block_t    block_arr[BRIDGE_MAX_BLOCK_NUM];
 
@@ -33,3 +36,4 @@ void bridge_dump_per_task_heap_info(void) {
     }
     ESP_LOGW(TAG, "-----------------------------------------------------");
 }
+*/

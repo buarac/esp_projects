@@ -52,18 +52,25 @@ esp_err_t bridge_wifi_init(void) {
     ESP_ERROR_CHECK( esp_wifi_init(&cfg) );
 
     s_bridge_wifi_event_group = xEventGroupCreate();
-    esp_event_handler_instance_t instance_any_id;
-    esp_event_handler_instance_t instance_got_ip;
-    ESP_ERROR_CHECK(esp_event_handler_instance_register(WIFI_EVENT,
+    /*
+    esp_event_handler_t instance_any_id;
+    esp_event_handler_t instance_got_ip;
+    */
+    ESP_ERROR_CHECK(esp_event_handler_register(WIFI_EVENT,
                                                         ESP_EVENT_ANY_ID,
                                                         &bridge_wifi_event_handler,
-                                                        NULL,
+                                                        
+                                                        NULL));
+                                                        /*
                                                         &instance_any_id));
-    ESP_ERROR_CHECK(esp_event_handler_instance_register(IP_EVENT,
+                                                        */
+    ESP_ERROR_CHECK(esp_event_handler_register(IP_EVENT,
                                                         IP_EVENT_STA_GOT_IP,
                                                         &bridge_wifi_event_handler,
-                                                        NULL,
-                                                        &instance_got_ip));
+                                                        
+                                                        NULL));
+                                                        /*
+                                                        &instance_got_ip));*/
 
  //   ESP_ERROR_CHECK( esp_wifi_set_storage(WIFI_STORAGE_RAM) );
     //

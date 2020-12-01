@@ -43,6 +43,6 @@ void app_main(void) {
         ESP_LOGW(TAG, "Measurement count: %zu", measurementCount);
         ESP_LOGW(TAG, "-------------------------------");
         //bridge_dump_per_task_heap_info();
-        vTaskDelay(30000/portTICK_RATE_MS);
+        vTaskDelay(60000/portTICK_RATE_MS);
     }
 }
